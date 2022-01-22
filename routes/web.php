@@ -17,9 +17,7 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
-Route::get('/', function () {
-    return view('home');
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::prefix('admin')->middleware(['auth', 'is_admin'])->group(function() {
     Route::get('/', [AdminController::class, 'admin'])->name('admin');
@@ -28,9 +26,11 @@ Route::prefix('admin')->middleware(['auth', 'is_admin'])->group(function() {
     Route::get('/categories', [AdminController::class, 'categories'])->name('adminCategories');   
     Route::get('/enterAsUser/{id}', [AdminController::class, 'enterAsUser'])->name('enterAsUser'); 
 });
+
+Route::get('/category/{category}', [HomeController::class, 'category'])->name('category');
 Route::get('/profile/{id}', [ProfileController::class, 'profile'])->name('profile');
 Route::post('/profile/save', [ProfileController::class, 'save'])->name('saveProfile');
 
 Auth::routes();
 
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+
