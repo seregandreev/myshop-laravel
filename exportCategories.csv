@@ -1,0 +1,6 @@
+id;name;description;picture;created_at;updated_at
+3;Видеокарты;"Описание категории Видеокарты";categories/no_picture.png;;
+4;Процессоры;"Описание категории Процессоры";categories/no_picture.png;;
+5;HDD;"Жесткие диски";categories/no_picture.png;2022-01-22T14:15:14.000000Z;2022-01-22T14:15:14.000000Z
+6;SSD;Твердотельные;categories/no_picture.png;2022-01-22T14:15:14.000000Z;2022-01-22T14:15:14.000000Z
+7;Корпуса;"Орг. Стекло";categories/no_picture.png;2022-01-22T14:15:14.000000Z;2022-01-22T14:15:14.000000Z

@@ -16,6 +16,27 @@ use Symfony\Component\CssSelector\XPath\XPathExpr;
 |
 */
 
+/*Artisan::command('exportCategories', function () {
+    $categories = Category::get()->toArray();
+    $file = fopen('exportCategories.csv', 'w');
+    $columns = [
+        'id',
+        'name',
+        'description',
+        'picture',
+        'created_at',
+        'updated_at'
+    ];
+    fputcsv($file, $columns, ';');
+    foreach($categories as $category) {
+        $category['name'] = iconv('utf-8', 'windows-1251//IGNORE', $category['name']);
+        $category['description'] = iconv('utf-8', 'windows-1251//IGNORE', $category['description']);
+        $category['picture'] = iconv('utf-8', 'windows-1251//IGNORE', $category['picture']);
+        fputcsv($file, $category, ';');
+    }
+    fclose($file);
+});
+
 Artisan::command('importCategoriesFromFile', function () {
     
     $file = fopen('categories.csv', 'r');
@@ -37,7 +58,7 @@ Artisan::command('importCategoriesFromFile', function () {
     }
 
     Category::insert($insert);
-});
+});*/
 
 Artisan::command('parseEkatalog', function () {
 
