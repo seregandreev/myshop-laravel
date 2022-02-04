@@ -10,7 +10,7 @@
     <ul>
         <li><a href="{{ route('adminUsers') }}">Пользователи</a></li>
         <li><a href="{{ route('adminProducts') }}">Продукты</a></li>
-        <li><a href="{{ route('adminCategories') }}">Категории</a></li>
+        <li><a href="{{ route('categories.index') }}">Категории</a></li>
     </ul>
     
     @if(session('starImportCategories'))

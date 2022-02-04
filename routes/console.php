@@ -3,6 +3,8 @@
 use App\Models\Category;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\CssSelector\XPath\XPathExpr;
 
 /*
@@ -15,6 +17,36 @@ use Symfony\Component\CssSelector\XPath\XPathExpr;
 | simple approach to interacting with each command's IO methods.
 |
 */
+
+Artisan::command('queryBuilder', function () {
+
+    $data = DB::table('categories as c')
+        ->select(
+            'c.id',
+            'c.name',
+            'c.description'
+        )
+        ->where('name', 'Процессоры')
+        ->first();
+
+    $data = DB::table('categories as c')
+        ->select(
+            'c.name',
+            DB::raw('count(p.id) as product_quantity'),
+            DB::raw('sum(p.price) as priceAmount')
+        )
+        ->leftJoin('products as p', function ($join) {
+            $join->on('c.id', 'p.category_id');
+        })
+        ->groupBy('c.id')
+        ->get();
+
+    DB::table('categories')
+        ->orderBy('id')
+        ->chunk(4, function ($categories) {
+            dump($categories->count());
+        });
+});
 
 /*Artisan::command('exportCategories', function () {
     $categories = Category::get()->toArray();
@@ -166,20 +198,28 @@ Artisan::command('massInsert', function () {
 });
 
 Artisan::command('updateCategory', function () {
-    Category::where('id', 2)->update([
-        'name' => 'Видеокарты!'
+    Auth::loginUsingId(1);
+    $category = Category::find(15);
+    $category->update([
+        'name' => 'Блоки питания'
     ]);
 });
 
 Artisan::command('deleteCategory', function () {
-    $category = Category::find(2);
+    Auth::loginUsingId(1);
+    $category = Category::find(14);
     $category->delete();
 });
 
 Artisan::command('createCategory', function () {
+    Auth::loginUsingId(1);
+    $dateNow = date('Y-m-d H:i:s');
     $category = new Category([
-        'name' => 'Видеокарты',
-        'description' => 'Описание категории Видеокарты'
+        'name' => 'usb hub',
+        'description' => 'Категория добавленая через консоль, тест Обзервер',
+        'picture' => 'categories/no_picture.png',
+        'created_at' => $dateNow,
+        'updated_at' => $dateNow 
     ]);
     $category->save();
 });

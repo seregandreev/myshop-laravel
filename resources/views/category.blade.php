@@ -24,7 +24,7 @@
     <div class="row">
         @foreach ($products as $product)
         <div class="col-3">
-            <div class="card mb-4" style="width: 15rem; height: 25rem;">
+            <div class="card mb-4" style="width: 18rem;">
                 <img src="{{ asset('storage') }}/{{$product->picture}}" class="card-img-top" alt="{{$product->name}}">
                 <div class="card-body">
                     <h5 class="card-title">
@@ -36,10 +36,25 @@
                     <div class="product-price">
                         {{ $product->price }} руб.
                     </div>
-                    <div class="product-buttons">
-                        <button class="btn btn-danger">-</button>
-                        0
-                        <button class="btn btn-success">+</button>
+                    <hr>
+                    <div class="row product-buttons">
+                        <div class='col-4 text-center'>
+                            <form action="{{ route('removeFromCart') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name='id' value='{{ $product->id }}'>
+                                <button @empty(session("cart.$product->id")) disabled @endempty class="btn btn-danger">-</button>
+                            </form>
+                        </div>
+                        <div class='col-4 text-center'>
+                            {{ session("cart.$product->id") ?? 0 }}
+                        </div>
+                        <div class='col-4 text-center'>
+                            <form action="{{ route('addToCart') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name='id' value='{{ $product->id }}'>
+                                <button class="btn btn-success">+</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>

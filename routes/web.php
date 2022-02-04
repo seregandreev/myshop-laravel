@@ -3,7 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProfileController;
+use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -23,10 +26,25 @@ Route::prefix('admin')->middleware(['auth', 'is_admin'])->group(function() {
     Route::get('/', [AdminController::class, 'admin'])->name('admin');
     Route::get('/users', [AdminController::class, 'users'])->name('adminUsers');
     Route::get('/products', [AdminController::class, 'products'])->name('adminProducts');
-    Route::get('/categories', [AdminController::class, 'categories'])->name('adminCategories');   
+    //Route::get('/categories', [AdminController::class, 'categories'])->name('adminCategories');   
     Route::get('/enterAsUser/{id}', [AdminController::class, 'enterAsUser'])->name('enterAsUser');
     Route::post('/exportCategories', [AdminController::class, 'exportCategories'])->name('exportCategories');
-    Route::post('/importCategories', [AdminController::class, 'importCategories'])->name('importCategories');  
+    Route::post('/importCategories', [AdminController::class, 'importCategories'])->name('importCategories');
+    
+    //Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+    Route::resource('categories', CategoryController::class);
+    /*Route::get('/category/create', 'create')->name('category.create');
+    Route::post('/category/store', 'store')->name('category.store');
+    Route::get('/category/{id}/edit', 'edit')->name('category.edit');
+    Route::post('/category/{id}/update', 'update')->name('category.update');
+    Route::post('/category/{id}/delete', 'delete')->name('category.delete');*/
+});
+
+Route::prefix('cart')->group(function() {
+    Route::get('/', [CartController::class, 'cart'])->name('cart');
+    Route::post('/addToCart', [CartController::class, 'addToCart'])->name('addToCart');
+    Route::post('/removeFromCart', [CartController::class, 'removeFromCart'])->name('removeFromCart');
+    Route::post('/createOrder', [CartController::class, 'createOrder'])->name('createOrder');
 });
 
 Route::get('/category/{category}', [HomeController::class, 'category'])->name('category');
