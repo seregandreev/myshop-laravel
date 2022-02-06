@@ -36,23 +36,17 @@
                     <td>{{$product->name}}</td>
                     <td>{{$product->price}}</td>
                     <td class="product-buttons">
-                        <span class='col-4 text-center'>
-                            <form method="post" action="{{ route('removeFromCart') }}">
-                                @csrf
-                                <input name='id' hidden value="{{ $product->id }}">
-                                <button @empty($product->quantity) disabled @endempty class="btn btn-danger">-</button>
-                            </form>
-                        </span>
-                        <span class='col-4 text-center'>
-                            {{ $product->quantity }}
-                        </span>
-                        <span class='col-4 text-center'>
-                            <form method="post" action="{{ route('addToCart') }}">
-                                @csrf
-                                <input name='id' hidden value="{{ $product->id }}">
-                                <button class="btn btn-success">+</button>
-                            </form>
-                        </span>
+                        <form method="post" action="{{ route('removeFromCart') }}">
+                            @csrf
+                            <input name='id' hidden value="{{ $product->id }}">
+                            <button @empty($product->quantity) disabled @endempty class="btn btn-danger">-</button>
+                        </form>
+                            {{ $product->quantity }}   
+                        <form method="post" action="{{ route('addToCart') }}">
+                            @csrf
+                            <input name='id' hidden value="{{ $product->id }}">
+                            <button class="btn btn-success">+</button>
+                        </form>
                     </td>
                     <td>
                         {{ $productSumm }}

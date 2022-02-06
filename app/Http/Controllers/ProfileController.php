@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Address;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
@@ -25,7 +26,21 @@ class ProfileController extends Controller
         request()->validate([
             'name' => 'required',
             'email' => "email|required|unique:users,email,{$user->id}",
-            'picture' => 'mimetypes:image/*'
+            'picture' => 'mimetypes:image/*',
+            'current_password' => 'current_password|nullable',
+            'password' => 'confirmed|min:8|nullable'
+        ]);
+
+        if($input['current_password']) {
+            $user->password = Hash::make($input['password']);
+        }
+
+        Address::where('user_id', $user->id)->update([
+            'main' => 0
+        ]);
+
+        Address::where('id', $input['main_address'])->update([
+            'main' => 1
         ]);
 
         if($newAddress) {
@@ -49,6 +64,7 @@ class ProfileController extends Controller
 
         $user->name = $name;
         $user->email = $email;
+
         $user->save();
         return back();
     }

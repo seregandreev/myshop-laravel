@@ -47,16 +47,27 @@
         <input type="email" class="form-control" name="email" value="{{ $user->email }}">
     </div>
     <div class="mb-3">
+        <label class="form-label">Текущий пароль</label>
+        <input type="password" class="form-control" name="current_password">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Новый пароль</label>
+        <input type="password" class="form-control" name="password">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Повторите новый пароль</label>
+        <input type="password" class="form-control" name="password_confirmation">
+    </div>
+    <div class="mb-3">
         <label class="form-label">Список адресов</label>
-        <ul>
             @forelse ($user->addresses as $address)
-                <li class="@if($address->main) b5 text-primary @endif">
-                    {{ $address->address }}
-                </li>
+            <br>
+                <input @if($address->main) checked @endif name="main_address" id="main_address{{$address->id}}" type="radio" value="{{ $address->id }}" class="form-check-input">
+                <label for="main_address{{$address->id}}" class="form-check-label @if($address->main) b5 text-primary @endif">{{ $address->address }}</label>
             @empty
                 <em>Нет адресов</em>
             @endforelse
-        </ul>
+
     </div>
     <div class="mb-3">
         <label class="form-label">Новый адрес</label>
