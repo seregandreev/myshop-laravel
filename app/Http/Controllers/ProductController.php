@@ -3,25 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
-class CategoryController extends Controller
+class ProductController extends Controller
 {
-    public function index() 
+    public function index()
     {
-        $categories = Category::orderBy('id', 'desc')->get();
-        //dd($categories);
-        return view('admin.categories.index',  compact('categories'));
+        $products = Product::orderBy('id', 'desc')->get();
+        return view('admin.products.index',  compact('products'));
     }
 
     public function create()
-    {
-        return view('admin.categories.create');
+    {   
+        $categories = Category::get();
+        return view('admin.products.create',  compact('categories'));
     }
 
     public function store(Request $request)
     {
-        $category = Category::create($request->all());
+        $product = Product::create($request->all());
 
         $input = request()->all();
         $picture = $input['picture'] ?? null;
@@ -33,26 +34,27 @@ class CategoryController extends Controller
         if($picture) {
             $ext = $picture->getClientOriginalExtension();
             $fileName = time() . rand(10000, 99999) . '.' . $ext;
-            $picture->storeAs('public/categories', $fileName);
-            $category->picture = "categories/$fileName";
-            $category->save();
+            $picture->storeAs('public/products', $fileName);
+            $product->picture = "products/$fileName";
+            $product->save();
         }
 
-        session()->flash('saveCategory');
+        session()->flash('saveProduct');
         return redirect()
-            ->to(route('category.create'));
+            ->to(route('product.create'));
     }
 
     public function edit(Request $request, $id)
     {
-        $category = Category::findOrFail($id);
-        return view('admin.categories.edit',  compact('category'));
+        $product = Product::findOrFail($id);
+        $categories = Category::get();
+        return view('admin.products.edit',  compact('product', 'categories'));
     }
 
     public function update(Request $request, $id)
     {
-        $category = Category::findOrFail($id);
-        $category->update($request->all());
+        $product = Product::findOrFail($id);
+        $product->update($request->all());
 
         $input = request()->all();
         $picture = $input['picture'] ?? null;
@@ -64,19 +66,19 @@ class CategoryController extends Controller
         if($picture) {
             $ext = $picture->getClientOriginalExtension();
             $fileName = time() . rand(10000, 99999) . '.' . $ext;
-            $picture->storeAs('public/categories', $fileName);
-            $category->picture = "categories/$fileName";
-            $category->save();
+            $picture->storeAs('public/products', $fileName);
+            $product->picture = "products/$fileName";
+            $product->save();
         }
 
         return redirect()
-            ->to(route('categories.index'));
+            ->to(route('products.index'));
     }
 
     public function delete ($id)
     {
-        Category::findOrFail($id)->delete();
+        Product::findOrFail($id)->delete();
         return redirect()
-        ->to(route('categories.index'));
+        ->to(route('products.index'));
     }
 }

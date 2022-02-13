@@ -12,6 +12,16 @@
 @endsection
 
 @section('content')
+
+    @if ($errors->isNotEmpty())
+    <div class="alert alert-danger" role="alert">
+        @foreach ($errors->all() as $error)
+            {{ $error }}
+            @if(!$loop->last)<br> @endif
+        @endforeach
+    </div>
+    @endif
+
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -72,9 +82,13 @@
     @if($summ)
         <form action="{{ route('createOrder') }}" method="POST">
             @csrf
-            <input type="text" class='form-control mb-2' name="name" value="{{ $user->name ?? '' }}">
-            <input type="text" class='form-control mb-2' name="email" value="{{ $user->email ?? '' }}">
-            <input type="text" class='form-control mb-2' name="adress" value="{{ $user->getMainAddress()->address ?? '' }}">
+            <input type="text" class='form-control mb-2' name="name" value="{{ $user->name ?? '' }}" placeholder="Имя">
+            <input type="text" class='form-control mb-2' name="email" value="{{ $user->email ?? '' }}" placeholder="e'mail">
+            <input type="text" class='form-control mb-2' name="address" value="{{ $address }}" placeholder="Адрес">
+            <input id='register_confirmation' name='register_confirmation' type="checkbox">
+            <!-- не забудьте добавить оферту -->
+            <label for="register_confirmation">Вы будете автоматически зарегистрированы</label>
+            <br>
             <button type="submit" class="btn btn-success">Оформить заказ</button>
         </form>
     @endif

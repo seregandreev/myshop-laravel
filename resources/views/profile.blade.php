@@ -30,11 +30,17 @@
         </div>
     @endif
 
+    @if (session('saveProfileFlash'))
+        <div class="alert alert-success" role="alert">
+            Профиль успешно сохранен
+        </div>
+    @endif
+
 <form action="{{ route('saveProfile') }}" method="POST" enctype="multipart/form-data">
     @csrf
     <input type="hidden" value="{{ $user->id }}" name="userId">
     <div class="mb-3">
-        <label class="form-label">Изображение</label>
+        <label class="form-label">Аватар</label>
         <img class="user-picture mb-2" src="{{ asset('storage') }}/{{ $user->picture }}" alt="">
         <input type="file" class="form-control" name="picture">
     </div>

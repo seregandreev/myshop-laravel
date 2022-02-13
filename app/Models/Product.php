@@ -13,6 +13,12 @@ class Product extends Model
         'name',
         'description',
         'picture',
-        'price'
+        'price',
+        'category_id'
     ];
+
+    public function categories()
+    {
+        return $this->hasMany(Category::class, 'id', 'category_id')->first();
+    }
 }

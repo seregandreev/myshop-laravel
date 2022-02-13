@@ -52,4 +52,15 @@ class User extends Authenticatable
     {
         return $this->addresses()->where('main', 1)->first();
     }
+
+    public function roles () 
+    {
+        return $this->belongsToMany(Role::class)
+            ->withTimestamps();
+    }
+
+    public function isAdmin ()
+    {
+        return $this->roles->pluck('name')->contains(env('ADMIN_ROLE'));
+    }
 }
