@@ -15,8 +15,72 @@
 
 @section('content')
 <div class="container">
-    <h2>Список категорий</h2>
-    <div class='row'>
+
+    @if(session('starImportCategories'))
+    <div class='alert alert-success'>
+        Загрузка категорий запущена
+    </div>
+    @endif
+
+    @if(session('starExportCategories'))
+    <div class='alert alert-success'>
+        Выгрузка категорий запущена
+    </div>
+    @endif
+
+    @if(session('saveImportCategoriesFileFlash'))
+    <div class='alert alert-success'>
+        Файл с категориями сохранен на сервере
+    </div>
+    @endif
+
+    @if(session('deleteExportCategoriesFileFlash'))
+    <div class='alert alert-success'>
+        Файл с категориями удален на сервере
+    </div>
+    @endif
+
+    <h3>Импорт категорий</h3>
+    <form method="POST" action="{{ route('saveImportCategoriesFile') }}" enctype="multipart/form-data">
+        <div class="row mb-3">
+        @csrf
+        <div class="col-6">
+            <input type="file" class="form-control" name="importCategoriesFile">
+        </div>
+        <div class='col-3'>
+            <button type="submit" class="btn btn-primary">Сохранить файл</button>
+        </div>
+    </form> 
+    <div class='col-3'>
+    <form method="POST" action="{{ route('importCategories') }}">
+        @csrf
+            <button type="submit" class="btn btn-primary">Загрузить категории</button>
+        </div>
+    </div>
+    </form>
+    <hr>
+    <h3>Экспорт категорий</h3>
+    <div class="row mb-3">
+
+        <div class='col-3'>
+            <form method="POST" action="{{ route('exportCategories') }}">
+                @csrf
+                <button type="submit" class="btn btn-primary">Выгрузить категории</button>
+            </form>
+        </div>
+        <div class='col-3'>
+            <form method="POST" action="{{ route('downloadExportFile') }}">
+                @csrf
+                <button type="submit" class="btn btn-primary">Сохранить файл на компьютер</button>
+            </form>
+        </div>
+    </div>
+    <hr>
+    
+    <div class='row mb-3 mt-3'>
+        <div class="col-3">
+            <h3>Список категорий</h3>
+        </div>
         <div class='col-3'>
             <a class='btn btn-primary' href="{{ route('category.create') }}">Создать категорию</a>
         </div>

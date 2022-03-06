@@ -21,11 +21,13 @@ class ProfileController extends Controller
 
     public function save (Request $request) {
         $input = request()->all();
+
         $name = $input['name'];
         $email = $input['email'];
         $picture = $input['picture'] ?? null;
         $userId = $input['userId'];
         $newAddress = $input['new_address'];
+        //$mainAddrUser = $input['mainAddrUser'];
         $user = User::find($userId);
 
         request()->validate([
@@ -44,21 +46,29 @@ class ProfileController extends Controller
         Address::where('user_id', $user->id)->update([
             'main' => 0
         ]);
-
         Address::where('id', $input['main_address'])->update([
             'main' => 1
         ]);
 
-        if($newAddress) {
-            Address::where('user_id', $user->id)->update([
-                'main' => 0
-            ]);
 
-            Address::create([
-                'user_id' => $user->id,
-                'address' => $newAddress,
-                'main' => 1
-            ]);
+        if($newAddress) {
+            if($request['mainAddrUser']) {
+                Address::where('user_id', $user->id)->update([
+                    'main' => 0
+                ]);
+                Address::create([
+                    'user_id' => $user->id,
+                    'address' => $newAddress,
+                    'main' => 1
+                ]);
+            } else {
+                Address::create([
+                    'user_id' => $user->id,
+                    'address' => $newAddress,
+                    'main' => 0
+                ]);
+            }
+
         }
 
         if($picture) {
@@ -73,6 +83,13 @@ class ProfileController extends Controller
 
         session()->flash('saveProfileFlash');
         $user->save();
+        return back();
+    }
+
+    public function deleteAddress($id)
+    {
+        Address::findOrFail($id)->delete();
+        session()->flash('deleteAddress');
         return back();
     }
 }

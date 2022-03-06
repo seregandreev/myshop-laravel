@@ -14,7 +14,7 @@
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
     <script src="{{ asset('js/app.js') }}" defer></script>
-    <script src="{{ asset('js/test.js') }}" defer></script>
+    {{-- <script src="{{ asset('js/test.js') }}" defer></script> --}}
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -47,7 +47,7 @@
                         <!-- Authentication Links -->
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('cart') }}">
-                                Корзина ({{ array_sum(session('cart') ?? []) }})
+                                Корзина <span id='cartProductsQuantity'>({{ array_sum(session('cart') ?? []) }})</span>
                             </a>
                         </li>
                         @guest
@@ -75,6 +75,7 @@
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{ route('profile', Auth::user()->id) }}">Профиль</a>
+                                    <a class="dropdown-item" href="{{ route('historyOrder') }}">История заказов</a>
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
@@ -98,6 +99,6 @@
             </div>
         </main>
     </div>
-    @yield('js')
+
 </body>
 </html>

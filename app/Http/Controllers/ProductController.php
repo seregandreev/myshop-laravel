@@ -39,7 +39,7 @@ class ProductController extends Controller
             $product->save();
         }
 
-        session()->flash('saveProduct');
+        session()->flash('createProduct');
         return redirect()
             ->to(route('product.create'));
     }
@@ -71,6 +71,7 @@ class ProductController extends Controller
             $product->save();
         }
 
+        session()->flash('updateProduct');
         return redirect()
             ->to(route('products.index'));
     }

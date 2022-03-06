@@ -21,7 +21,14 @@
   </div>
   @endif
 
+  @if (session('saveCategory'))
+  <div class="alert alert-success" role="alert">
+      Категория успешно добавлена
+  </div>
+  @endif
+
   <div class="card-header first mb-3"><h3>Заполните информацию по новой категории</h3><a class="card-header-link"  href="{{ route('categories.index') }}"><i class="fa fa-mail-reply-all" aria-hidden="true"></i>  Вернуться к списку категорий</a></div>
+  
   <form action="{{ route('category.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
     <div class="mb-3">

@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -10,7 +10,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class ImportCategories implements ShouldQueue
+class ImportProducts implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -31,7 +31,7 @@ class ImportCategories implements ShouldQueue
      */
     public function handle()
     {
-        $file = fopen('public/storage/import/categories.csv', 'r');
+        $file = fopen('public/storage/import/products.csv', 'r');
 
         $i = 0;
         $insert = [];
@@ -44,11 +44,13 @@ class ImportCategories implements ShouldQueue
             }
     
             $data = array_combine($columns, $row);
+            $data['picture'] = 'products/no_picture.png';
+            $data['category_id'] = '25';
             $data['created_at'] = date('Y-m-d H:i:s');
             $data['updated_at'] = date('Y-m-d H:i:s');
             $insert[] = $data;        
         }
     
-        Category::insert($insert);
+        Product::insert($insert);
     }
 }

@@ -30,48 +30,48 @@ class CartController extends Controller
         return view('cart', compact('products', 'user', 'address'));
     }
 
-    public function addToCart(Request $request)
+    public function removeFromCart () {
+        $productId = request('id');
+        $cart = session('cart') ?? [];
+
+        if (!isset($cart[$productId]))
+            return 0;
+        
+        $quantity = $cart[$productId];
+        if ($quantity > 1) {
+            $cart[$productId] = --$quantity;
+        } else {
+            unset($cart[$productId]);
+        }
+
+        session()->put('cart', $cart);
+        return $cart[$productId] ?? 0;
+    }
+
+    public function addToCart ()
     {
         $productId = request('id');
 
         $cart = session('cart') ?? [];
 
-        if(isset($cart[$productId]))
-        {
+        if (isset($cart[$productId])) {
             $cart[$productId] = ++$cart[$productId];
         } else {
             $cart[$productId] = 1;
         }
+
         session()->put('cart', $cart);
-        return back();
-    }
-
-    public function removeFromCart(Request $request)
-    {
-        $productId = request('id');
-        $cart = session('cart') ?? [];
-
-        if(!isset($cart[$productId]))
-            return back();
-
-        $quantity = $cart[$productId];
-        if($quantity > 1)
-        {
-            $cart[$productId] = --$cart[$productId];
-        } else {
-            unset($cart[$productId]);
-        }
-        session()->put('cart', $cart);
-        return back();
+        return $cart[$productId];
     }
 
     public function createOrder ()
     {
+        sleep(1);
         request()->validate([
             'name' => 'required',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email',
             'address' => 'required',
-            'register_confirmation' => 'accepted'
+            'register_confirmation' => 'accepted|sometimes'
         ]);
 
             DB::transaction(function () {
@@ -112,12 +112,12 @@ class CartController extends Controller
                 $data = [
                     'products' => $order->products,
                     'name' => $user->name,
-                    'password' => $password
+                    'password' => $password ?? ''
                 ];
                 Mail::to($user->email)->send(new OrderCreated($data));
             });        
 
             session()->forget('cart');
-            return back();
+            return true;
     }
 }

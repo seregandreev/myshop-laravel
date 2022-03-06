@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
@@ -48,7 +49,8 @@ Artisan::command('queryBuilder', function () {
         });
 });
 
-/*Artisan::command('exportCategories', function () {
+/*
+Artisan::command('exportCategories', function () {
     $categories = Category::get()->toArray();
     $file = fopen('exportCategories.csv', 'w');
     $columns = [
@@ -90,7 +92,54 @@ Artisan::command('importCategoriesFromFile', function () {
     }
 
     Category::insert($insert);
-});*/
+});
+
+Artisan::command('exportProducts', function () {
+    $products = Product::get()->toArray();
+    $file = fopen('exportProducts.csv', 'w');
+    $columns = [
+        'id',
+        'name',
+        'description',
+        'picture',
+        'price',
+        'category_id',
+        'created_at',
+        'updated_at'
+    ];
+    fputcsv($file, $columns, ';');
+    foreach($products as $product) {
+        $product['name'] = iconv('utf-8', 'windows-1251//IGNORE', $product['name']);
+        $product['description'] = iconv('utf-8', 'windows-1251//IGNORE', $product['description']);
+        $product['picture'] = iconv('utf-8', 'windows-1251//IGNORE', $product['picture']);
+        fputcsv($file, $product, ';');
+    }
+    fclose($file);
+});
+
+Artisan::command('importProductsFromFile', function () {
+    
+    $file = fopen('products.csv', 'r');
+
+    $i = 0;
+    $insert = [];
+    while ($row = fgetcsv($file, 1000, ';')) {
+        if ($i++ == 0) {
+            $bom = pack('H*','EFBBBF');
+            $row = preg_replace("/^$bom/", '', $row);
+            $columns = $row;
+            continue;
+        }
+
+        $data = array_combine($columns, $row);
+        $data['created_at'] = date('Y-m-d H:i:s');
+        $data['updated_at'] = date('Y-m-d H:i:s');
+        $insert[] = $data;        
+    }
+
+    Product::insert($insert);
+});
+*/
 
 Artisan::command('parseEkatalog', function () {
 

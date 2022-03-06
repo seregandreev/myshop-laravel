@@ -21,6 +21,12 @@
   </div>
   @endif
 
+  @if (session('createProduct'))
+  <div class="alert alert-success" role="alert">
+      Продукт успешно добавлен
+  </div>
+  @endif
+
   <div class="card-header first mb-3"><h3>Заполните информацию по новому продукту</h3><a class="card-header-link"  href="{{ route('products.index') }}"><i class="fa fa-mail-reply-all" aria-hidden="true"></i>  Вернуться к списку продуктов</a></div>
   <form action="{{ route('product.store') }}" method="POST" enctype="multipart/form-data">
     @csrf

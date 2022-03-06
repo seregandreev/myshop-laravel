@@ -25,6 +25,12 @@
   </div>
   @endif
 
+  @if (session('updateProduct'))
+  <div class="alert alert-success" role="alert">
+      Продукт успешно изменён
+  </div>
+  @endif
+
   <div class="card-header first mb-3">
       <h3>Заполните информацию по продукту</h3>
         <a class="card-header-link"  href="{{ route('products.index') }}">

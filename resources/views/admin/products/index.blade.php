@@ -14,9 +14,66 @@
 @endsection
 
 @section('content')
+
 <div class="container">
-    <h2>Список продуктов</h2>
-    <div class='row'>
+    @if(session('starImportProducts'))
+    <div class='alert alert-success'>
+        Загрузка продуктов запущена
+    </div>
+    @endif
+
+    @if(session('starExportProducts'))
+    <div class='alert alert-success'>
+        Выгрузка продуктов запущена
+    </div>
+    @endif
+
+    @if(session('saveImportProductsFileFlash'))
+    <div class='alert alert-success'>
+        Файл с продуктами сохранен на сервере
+    </div>
+    @endif
+    <h3>Импорт продуктов</h3>
+    <form method="POST" action="{{ route('saveImportProductsFile') }}" enctype="multipart/form-data">
+        <div class="row mb-3">
+        @csrf
+        <div class="col-6">
+            <input type="file" class="form-control" name="importProductsFile">
+        </div>
+        <div class='col-3'>
+            <button type="submit" class="btn btn-primary">Сохранить файл</button>
+        </div>
+    </form> 
+    <div class='col-3'>
+    <form method="POST" action="{{ route('importProducts') }}">
+        @csrf
+            <button type="submit" class="btn btn-primary">Загрузить продукты</button>
+        </div>
+    </div>
+    </form>
+    <hr>
+    <h3>Экспорт продуктов</h3>
+    <div class="row mb-3">
+
+        <div class='col-3'>
+            <form method="POST" action="{{ route('exportProducts') }}">
+                @csrf
+                <button type="submit" class="btn btn-primary">Выгрузить продукты</button>
+            </form>
+        </div>
+        <div class='col-3'>
+            <form method="POST" action="{{ route('downloadExportProductsFile') }}">
+                @csrf
+                <button type="submit" class="btn btn-primary">Сохранить файл на компьютер</button>
+            </form>
+        </div>
+    </div>
+    <hr>
+
+    <div class='row mt-5'>
+        <div class="col-3">
+            <h2>Список продуктов</h2>
+        </div>
         <div class='col-3'>
             <a class='btn btn-primary' href="{{ route('product.create') }}">Добавить новый продукт</a>
         </div>

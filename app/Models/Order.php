@@ -23,4 +23,10 @@ class Order extends Model
             ])
             ->withTimestamps();
     }
+
+    public function orderProducts ()
+    {
+        return $this->hasMany(OrderProduct::class);
+    }
+
 }

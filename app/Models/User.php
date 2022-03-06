@@ -63,4 +63,9 @@ class User extends Authenticatable
     {
         return $this->roles->pluck('name')->contains(env('ADMIN_ROLE'));
     }
+
+    public function orders ()
+    {
+        return $this->hasMany(Order::class);
+    }
 }
