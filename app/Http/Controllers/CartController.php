@@ -45,7 +45,10 @@ class CartController extends Controller
         }
 
         session()->put('cart', $cart);
-        return $cart[$productId] ?? 0;
+        return [
+            'productQuantity' => $cart[$productId] ?? 0,
+            'cartProductsQuantity' => array_sum($cart)
+        ];
     }
 
     public function addToCart ()
@@ -61,7 +64,10 @@ class CartController extends Controller
         }
 
         session()->put('cart', $cart);
-        return $cart[$productId];
+        return [
+            'productQuantity' => $cart[$productId] ?? 0,
+            'cartProductsQuantity' => array_sum($cart)
+        ];
     }
 
     public function createOrder ()
@@ -119,5 +125,10 @@ class CartController extends Controller
 
             session()->forget('cart');
             return true;
+    }
+    
+    public function productsQuantity() 
+    {
+        return array_sum(session('cart') ?? []);
     }
 }

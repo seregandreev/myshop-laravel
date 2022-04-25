@@ -11,7 +11,8 @@
                     </p>
                 </div>
                 <div class="card-footer">
-                    <a :href="`${routeCategory}/${category.id}`" class="btn btn-primary w-100">Перейти</a>
+                    <router-link :to="`category/${category.id}`" class="btn btn-primary w-100">Перейти</router-link>
+                    
                 </div>
             </div>
         </div>
@@ -19,7 +20,7 @@
 
 <script>
 export default {
-    props: ['category', 'routeCategory']
+    props: ['category']
 }
 </script>
 

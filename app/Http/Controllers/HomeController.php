@@ -48,4 +48,9 @@ class HomeController extends Controller
     {
         return view('vue_test');
     }
+
+    public function getCategories()
+    {
+        return Category::get();
+    }
 }
