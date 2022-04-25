@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import ProductComponent from './ProductComponent.vue'
+import ProductComponent from '../components/ProductComponent.vue'
 
     export default {
         props: ['category'],
@@ -23,7 +23,8 @@ import ProductComponent from './ProductComponent.vue'
             }
         },
         mounted() {
-            axios.get(`/category/${this.category}/getProducts`)
+            const id = this.$route.params.id
+            axios.get(`/api/category/${id}/getProducts`)
                 .then(response => {
                     this.products = response.data
                 })

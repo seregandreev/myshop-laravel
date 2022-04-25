@@ -1,12 +1,11 @@
 <template>
 <div>
-  <h1>{{pageTitle}}</h1>
       <div class="row">
           <category-component
           v-for='category in categories' 
           :key="category.id"
           :category="category"
-          :route-category="routeCategory"
+          
           >
           </category-component>
     </div>
@@ -15,17 +14,20 @@
 </template>
 
 <script>
-import CategoryComponent from './CategoryComponent.vue'
+import CategoryComponent from '../components/CategoryComponent.vue'
 
 export default {
   components: { CategoryComponent },
-    props: [
-        'pageTitle',
-        'categories',
-        'routeCategory'
-    ],
+    data () {
+        return {
+            categories: []
+        }
+    },
     mounted() {
-        //console.log(this.categories)
+        axios.get('/api/getCategories')
+            .then((response)=> {
+                this.categories = response.data
+            })
     }
 }
 </script>
