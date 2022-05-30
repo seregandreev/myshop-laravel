@@ -7,7 +7,7 @@ use App\Models\Address;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
-use Illuminate\Http\Request;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -15,8 +15,9 @@ use Illuminate\Support\Facades\Mail;
 
 class CartController extends Controller
 {
-    public function cart () {
-        $cart = session('cart') ?? [];
+
+    public function info () {
+        $cart = json_decode(request('products'), true);
 
         $products = Product::whereIn('id', array_keys($cart))
                         ->get()
@@ -24,10 +25,14 @@ class CartController extends Controller
                             $product->quantity = $cart[$product->id];
                             return $product;
                         });
-        
+
         $user = Auth::user();
-        $address = $user ? $user->getMainAddress()->address ?? '' : '';
-        return view('cart', compact('products', 'user', 'address'));
+        $address = $user ? $user->addresses()->where('main', 1)->first()->address ?? '' : '';
+        return [
+            'products' => $products,
+            'user' => $user,
+            'address' => $address,
+        ];
     }
 
     public function removeFromCart () {
@@ -46,8 +51,8 @@ class CartController extends Controller
 
         session()->put('cart', $cart);
         return [
-            'productQuantity' => $cart[$productId] ?? 0,
-            'cartProductsQuantity' => array_sum($cart)
+                'productQuanity' => $cart[$productId] ?? 0,
+                'cartProductsQuantity' => array_sum($cart)
         ];
     }
 
@@ -65,14 +70,13 @@ class CartController extends Controller
 
         session()->put('cart', $cart);
         return [
-            'productQuantity' => $cart[$productId] ?? 0,
+            'productQuanity' => $cart[$productId] ?? 0,
             'cartProductsQuantity' => array_sum($cart)
         ];
     }
 
     public function createOrder ()
     {
-        sleep(1);
         request()->validate([
             'name' => 'required',
             'email' => 'required|email',
@@ -101,7 +105,7 @@ class CartController extends Controller
         
                 $address = $user->getMainAddress();
         
-                $cart = session('cart');
+                $cart = request('products');
                 $order = Order::create([
                     'user_id' => $user->id,
                     'address_id' => $address->id
@@ -126,8 +130,8 @@ class CartController extends Controller
             session()->forget('cart');
             return true;
     }
-    
-    public function productsQuantity() 
+
+    public function productsQuantity ()
     {
         return array_sum(session('cart') ?? []);
     }
